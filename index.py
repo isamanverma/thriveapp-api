@@ -14,12 +14,14 @@ app.add_middleware(
 )
 
 data = pd.read_csv('data.csv')
-
-data['BMI_Range'] = data['BMI_Range'].map(
-    {'Healthy': 3, 'Overweight': 4, 'Underweight': 1, 'Normal': 2})
-data['Veg/NonVeg'] = data['Veg/NonVeg'].fillna(0).astype(int)
+# Fix future warning
+data['BMI_Range'] = data['BMI_Range'].replace(
+    {'Unknown': np.NAN}).astype('category')
+# Use -1 as a specific value for missing data
+data['Veg/NonVeg'] = data['Veg/NonVeg'].fillna(-1).astype(int)
 data['Sugars'].fillna(data['Sugars'].mean(), inplace=True)
-data['BMI_Range'].fillna(data['BMI_Range'].mean(), inplace=True)
+# Use mode for categorical data
+data['BMI_Range'].fillna(data['BMI_Range'].mode()[0], inplace=True)
 
 
 def calculate_bmr(weight, height, age, gender):
