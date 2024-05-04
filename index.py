@@ -1,7 +1,17 @@
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Enable CORS for all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"], 
+)
 
 data = pd.read_csv('data.csv')
 
@@ -14,7 +24,7 @@ data['BMI_Range'].fillna(data['BMI_Range'].mean(), inplace=True)
 
 def calculate_bmr(weight, height, age, gender):
     return 10 * weight + 6.25 * height - 5 * age + (-161 if gender == 'F' else 5)
-
+x
 
 def extract_params(param_str):
     params = {}
